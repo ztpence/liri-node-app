@@ -58,7 +58,40 @@ function SpotifySearch(){
 
 
 function movie(){
-    //    * Title of the movie.
+    var movieArgs = process.argv;
+    var movie = movieArgs[3];
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    var noInput = "http://www.omdbapi.com/?t=Mr+Nobody&y=&plot=short&apikey=trilogy"
+    if (movie){
+        request(queryUrl, function(error, response, body){
+            if (!error && response.statusCode === 200) {
+                console.log('No Error and Request Works');
+
+                console.log('Title: ' + JSON.parse(body).Title);
+                console.log('Year: ' + JSON.parse(body).Year);
+                console.log('IMDB Raiting: ' + JSON.parse(body).imdbRating);
+                console.log('Rotten Tomatoes Rating:' + JSON.parse(body).Ratings[1].Value);
+                console.log('Production Country: ' + JSON.parse(body).Country);
+                console.log('Language: ' + JSON.parse(body).Language);
+                console.log('Plot: ' + JSON.parse(body).Plot);
+                console.log('Actors: ' + JSON.parse(body).Actors);
+            }
+        });
+    } else {
+        request(noInput, function(error, response, body){
+            if (!error && response.statusCode ===200) {
+                console.log('No Error and Mr Nobody')
+                
+                console.log('Title: ' + JSON.parse(body).Title);
+                console.log('Year: ' + JSON.parse(body).Year);
+                console.log('IMDB Raiting: ' + JSON.parse(body).imdbRating);
+                console.log('Rotten Tomatoes Rating:' + JSON.parse(body).Ratings[1].Value);
+                console.log('Production Country: ' + JSON.parse(body).Country);
+                console.log('Language: ' + JSON.parse(body).Language);
+                console.log('Plot: ' + JSON.parse(body).Plot);
+                console.log('Actors: ' + JSON.parse(body).Actors);
+
+                //    * Title of the movie.
     //    * Year the movie came out.
     //    * IMDB Rating of the movie.
     //    * Rotten Tomatoes Rating of the movie.
@@ -66,6 +99,11 @@ function movie(){
     //    * Language of the movie.
     //    * Plot of the movie.
     //    * Actors in the movie.
+            }
+        });
+    }
+    
+    
 
     // If the user doesn't type in a movie it will output the data for Mr. Nobody
 }
