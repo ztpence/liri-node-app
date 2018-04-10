@@ -32,7 +32,7 @@ function SpotifySearch(){
             return console.log('Spotify Error: ' + err);
         }
             // console.log('JSON: ', JSON.stringify(data, null));
-            Console.log('Artist: ' + data.tracks.items[0].artists[0].name);
+            console.log('Artist: ' + data.tracks.items[0].artists[0].name);
             consloe.log('Song Name: ' + data.tracks.items[0].name);
             console.log('Preview: ' + data.tracks.items[0].preview_url);
             consloe.log('Album: ' + data.tracks.items[0].album.name);
