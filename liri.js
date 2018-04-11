@@ -1,12 +1,12 @@
 require("dotenv").config();
 
 var keys = require('./keys.js');
-var twitter = require('twitter');
-var spotify = require('node-spotify-api');
+var Twitter = require('twitter');
+var Spotify = require('node-spotify-api');
 var request = require('request');
 var fs = require('fs');
 
-
+console.log(keys.spotify);
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 var parameters = { name: 'Ztrip2', count:20};
@@ -16,7 +16,7 @@ var parameters = { name: 'Ztrip2', count:20};
 function MyTweets(){  //show last 20 tweets and when they were created in terminal
     client.get('statuses/user_timeline',parameters, function(error, tweets, response){
         if (!error){
-            for (var i = 0; i , tweets.lenghth; i++){
+            for (var i = 0; i < tweets.length; i++){
                 console.log('Tweet: ' + tweets[i].text + '\nCreated: ' + tweets[i].created_at);
             }
         }
@@ -33,9 +33,9 @@ function SpotifySearch(){
         }
             // console.log('JSON: ', JSON.stringify(data, null));
             console.log('Artist: ' + data.tracks.items[0].artists[0].name);
-            consloe.log('Song Name: ' + data.tracks.items[0].name);
+            console.log('Song Name: ' + data.tracks.items[0].name);
             console.log('Preview: ' + data.tracks.items[0].preview_url);
-            consloe.log('Album: ' + data.tracks.items[0].album.name);
+            console.log('Album: ' + data.tracks.items[0].album.name);
     });
     } else { // if no song is enterd the default song is "The Sign"
          spotify.search({ type: 'track', query: 'the+sign'}, function(err, data) {
@@ -43,9 +43,9 @@ function SpotifySearch(){
                  return console.log('Spotify Error: ' + err);
              }
              Console.log('Artist: ' + data.tracks.items[0].artists[0].name);
-            consloe.log('Song Name: ' + data.tracks.items[0].name);
+            console.log('Song Name: ' + data.tracks.items[0].name);
             console.log('Preview: ' + data.tracks.items[3].preview_url);
-            consloe.log('Album: ' + data.tracks.items[0].album.name);
+            console.log('Album: ' + data.tracks.items[0].album.name);
          });   
     }
 
@@ -57,10 +57,10 @@ function SpotifySearch(){
 }
 
 
-function movie(){
+function Movie(){
     var movieArgs = process.argv;
     var movie = movieArgs[3];
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy";
     var noInput = "http://www.omdbapi.com/?t=Mr+Nobody&y=&plot=short&apikey=trilogy"
     if (movie){
         request(queryUrl, function(error, response, body){
@@ -108,8 +108,65 @@ function movie(){
     // If the user doesn't type in a movie it will output the data for Mr. Nobody
 }
 
-function WhatItSays(){
+function doWhat() {
+    fs.readFile('random.txt', "UTF-8", function(err, data) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log(data);
+  
+        var dataArr = data.split(',');
+        command = dataArr[0];
+        search = dataArr[1];
+  
+        if (command === 'spotify-this-song') {
+          SpotifySearch(search);
+        } else if (command === 'movie-this') {
+          Movie(search);
+        } else if (command === 'my-tweets') {
+          MyTweets();
+        } else {
+          console.log('Enter valid command');
+        }
+        /*
+        switch(command) {
+            case 'spotify':
+            case 'song-search':
+            case 'spotify-this-song':
+                askSpotify(search);
+                break;
+
+            case 'movie-this':
+            case 'movies':
+                askOMDB(search)
+                break;
+
+            case 'my-tweets':
+                myTweets()
+                break;
+            
+            default:
+                console.log('Invalid command.')
+        }
+        */
+      }
+    });
+  }
+  
+  var command = process.argv[2];
+
+  if (command ==='do-what-it-says') {
+    doWhat();
+  } else if (command === 'my-tweets') {
+    MyTweets();
+  } else if (command === 'spotify-this-song') {
+    SpotifySearch(process.argv[3]);
+  } else if (command === 'movie-this') {
+    Movie(process.argv[3]);
+  } else {
+    console.log('Enter valid command');
+  }
     //In addition to loggin the data in Bash, output data to a .txt file called log.txt
     //Make sure to append each command to the log.txt file
     //don't overwrite each command
-}
+
